@@ -1,0 +1,12 @@
+pyrogram==2.0.106
+tgcrypto==1.2.2
+yt-dlp
+requests
+Flask==1.1.2
+gunicorn==20.1.0
+Jinja2==3.0.3
+werkzeug==2.0.2
+itsdangerous==2.0.1
+flask_cors
+moviepy==1.0.3
+Pillow==9.4.0
