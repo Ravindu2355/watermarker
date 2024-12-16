@@ -80,7 +80,13 @@ async def handle_video(client, message):
 
     try:
         # Download the video
-        video = await message.download(file_name=TEMP_DIR, progress=progress_callback(client, chat_id, progress_message.id, "Downloading...", last_update_time))
+        def download_progress(current, total):
+            nonlocal last_update_time
+            last_update_time = await progress_callback(
+                current, total, client, chat_id, progress_message.id, last_update_time, "Downloading"
+            )
+
+        video = await message.download(file_name=TEMP_DIR, progress=download_progress)
         output_video_path = os.path.join(TEMP_DIR, f"watermarked_{os.path.basename(video)}")
         thumbnail_path = os.path.join(TEMP_DIR, f"thumbnail_{os.path.basename(video)}.jpg")
 
@@ -103,6 +109,12 @@ async def handle_video(client, message):
         last_update_time = time.time()
         generate_thumbnail(output_video_path, thumbnail_path)
 
+        def upload_progress(current, total):
+            nonlocal last_update_time
+            last_update_time = await progress_callback(
+                current, total, client, chat_id, progress_message.id, last_update_time, "Uploading"
+            )
+
         # Upload the processed video with progress
         await client.edit_message_text(chat_id, progress_message.id, "Uploading the video...")
         last_update_time = time.time()
@@ -112,7 +124,7 @@ async def handle_video(client, message):
             caption="Here is your watermarked video!",
             thumb=thumbnail_path,
             supports_streaming=True,
-            progress=progress_callback(client, chat_id, progress_message.id, "Uploading...", last_update_time)
+            progress=upload_progress
         )
 
         # Cleanup
