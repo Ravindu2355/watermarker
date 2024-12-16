@@ -55,7 +55,10 @@ def add_watermark(video_path, watermark_text, logo_path, output_path, progress_c
                 .set_pos(("left", "bottom"))  # Position the logo at the bottom-left
         )
         video_with_watermark = CompositeVideoClip([video, logo])
-        video_with_watermark.write_videofile(output_path, codec="libx264", audio_codec="aac", progress_bar=False, verbose=False, logger=progress_callback)
+        video_with_watermark.write_videofile(output_path, codec="libx264", audio_codec="aac", 
+                                             #progress_bar=False, 
+                                             #verbose=False, 
+                                             logger=progress_callback)
         video.close()
         video_with_watermark.close()
 
