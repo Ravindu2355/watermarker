@@ -26,7 +26,14 @@ def update_progress_message(client, chat_id, message_id, text, last_update_time)
         return current_time
     return last_update_time
 
-
+async def progress_callback(current, total, client, chat_id, message_id, last_update_time, status):
+            current_time = time.time()
+            if current_time - last_update_time >= 10:  # Update every 10 seconds
+                percentage = int(current / total * 100)
+                message_text = f"{status}: {percentage}% completed ({current // 1024} KB of {total // 1024} KB)"
+                await client.edit_message_text(chat_id, message_id, message_text)
+                return current_time
+            return last_update_time
 
 
 
@@ -83,14 +90,7 @@ async def handle_video(client, message):
             message_text = f"Processing video: {int(progress * 100)}% completed..."
             last_update_time = update_progress_message(client, chat_id, progress_message.id, message_text, last_update_time)
 
-        async def progress_callback(current, total, client, chat_id, message_id, last_update_time, status):
-            current_time = time.time()
-            if current_time - last_update_time >= 10:  # Update every 10 seconds
-                percentage = int(current / total * 100)
-                message_text = f"{status}: {percentage}% completed ({current // 1024} KB of {total // 1024} KB)"
-                await client.edit_message_text(chat_id, message_id, message_text)
-                return current_time
-            return last_update_time
+        
 
             
         watermark_text = "My Watermark"  # Change this to your desired text
