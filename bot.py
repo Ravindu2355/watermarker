@@ -43,8 +43,8 @@ def add_watermark(video_path, watermark_text, logo_path, output_path, progress_c
     video = VideoFileClip(video_path)
 
     # Add text watermark
-    watermark = TextClip(watermark_text, fontsize=30, color='white', font="Arial-Bold",method='caption')
-    watermark = watermark.set_pos(("right", "bottom")).set_duration(video.duration)
+    #watermark = TextClip(watermark_text, fontsize=30, color='white', font="Arial-Bold",method='caption')
+    #watermark = watermark.set_pos(("right", "bottom")).set_duration(video.duration)
 
     # Add logo
     if os.path.exists(logo_path):
@@ -55,14 +55,9 @@ def add_watermark(video_path, watermark_text, logo_path, output_path, progress_c
                 .set_pos(("left", "bottom"))  # Position the logo at the bottom-left
         )
         video_with_watermark = CompositeVideoClip([video, watermark, logo])
-    else:
-        video_with_watermark = CompositeVideoClip([video, watermark])
-
-    # Export the watermarked video with progress callback
-    video_with_watermark.write_videofile(output_path, codec="libx264", audio_codec="aac", progress_bar=False, verbose=False, logger=progress_callback)
-
-    video.close()
-    video_with_watermark.close()
+        video_with_watermark.write_videofile(output_path, codec="libx264", audio_codec="aac", progress_bar=False, verbose=False, logger=progress_callback)
+        video.close()
+        video_with_watermark.close()
 
 # Function to generate thumbnail
 def generate_thumbnail(video_path, thumbnail_path, timestamp=1.0):
