@@ -19,10 +19,10 @@ os.makedirs(TEMP_DIR, exist_ok=True)
 LOGO_PATH = "logo.png"  # Provide the path to your logo image
 
 # Throttle progress messages
-def update_progress_message(client, chat_id, message_id, text, last_update_time):
+async def update_progress_message(client, chat_id, message_id, text, last_update_time):
     current_time = time.time()
     if current_time - last_update_time >= 10:  # Update every 10 seconds
-        client.edit_message_text(chat_id, message_id, text)
+        await client.edit_message_text(chat_id, message_id, text)
         return current_time
     return last_update_time
 
@@ -80,7 +80,7 @@ async def handle_video(client, message):
 
     try:
         # Download the video
-        def download_progress(current, total):
+        async def download_progress(current, total):
             nonlocal last_update_time
             last_update_time = await progress_callback(
                 current, total, client, chat_id, progress_message.id, last_update_time, "Downloading"
@@ -91,10 +91,10 @@ async def handle_video(client, message):
         thumbnail_path = os.path.join(TEMP_DIR, f"thumbnail_{os.path.basename(video)}.jpg")
 
         # Add watermark and logo with progress updates
-        def moviepy_progress_callback(progress):
+        async def moviepy_progress_callback(progress):
             nonlocal last_update_time
             message_text = f"Processing video: {int(progress * 100)}% completed..."
-            last_update_time = update_progress_message(client, chat_id, progress_message.id, message_text, last_update_time)
+            last_update_time = await update_progress_message(client, chat_id, progress_message.id, message_text, last_update_time)
 
         
 
@@ -109,7 +109,7 @@ async def handle_video(client, message):
         last_update_time = time.time()
         generate_thumbnail(output_video_path, thumbnail_path)
 
-        def upload_progress(current, total):
+        async def upload_progress(current, total):
             nonlocal last_update_time
             last_update_time = await progress_callback(
                 current, total, client, chat_id, progress_message.id, last_update_time, "Uploading"
