@@ -13,6 +13,8 @@ COPY . .
 # Install Python dependencies
 COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
+# Install ImageMagick (required for MoviePy)
+RUN apt-get update && apt-get install -y imagemagick
 
 # Expose the port the app runs on (not strictly necessary for a Telegram bot)
 #EXPOSE 8000
