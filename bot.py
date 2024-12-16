@@ -35,6 +35,16 @@ async def progress_callback(current, total, client, chat_id, message_id, last_up
                 return current_time
             return last_update_time
 
+async def moviepy_progress_callback(frame, total_frames, time, status, client, chat_id, message_id, last_update_time):
+            nonlocal last_update_time
+            if status == "finished":
+              print("Processing completed!")
+            else:
+              percentage = int((frame / total_frames) * 100)
+              message_text = f"Processing video: {percentage}% completed (Frame {frame} of {total_frames})"
+              last_update_time = await update_progress_message(client, chat_id, message_id, message_text, last_update_time)
+            return last_update_time
+
 
 
 # Function to add watermark and logo
@@ -58,7 +68,10 @@ def add_watermark(video_path, watermark_text, logo_path, output_path, progress_c
         video_with_watermark.write_videofile(output_path, codec="libx264", audio_codec="aac", 
                                              #progress_bar=False, 
                                              #verbose=False, 
-                                             logger=progress_callback)
+                                             #logger=progress_callback
+                                            )
+        
+        
         video.close()
         video_with_watermark.close()
 
@@ -95,7 +108,6 @@ async def handle_video(client, message):
             last_update_time = await update_progress_message(client, chat_id, progress_message.id, message_text, last_update_time)
 
         
-
             
         watermark_text = "My Watermark"  # Change this to your desired text
         await client.edit_message_text(chat_id, progress_message.id, "Processing the video...")
