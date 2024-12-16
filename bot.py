@@ -35,8 +35,8 @@ async def progress_callback(current, total, client, chat_id, message_id, last_up
                 return current_time
             return last_update_time
 
-async def moviepy_progress_callback(frame, total_frames, time, status, client, chat_id, message_id, last_update_time):
-            nonlocal last_update_time
+async def mmoviepy_progress_callback(frame, total_frames, time, status, client, chat_id, message_id, last_update_time):
+            #nonlocal last_update_time
             if status == "finished":
               print("Processing completed!")
             else:
