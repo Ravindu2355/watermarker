@@ -43,7 +43,7 @@ def add_watermark(video_path, watermark_text, logo_path, output_path, progress_c
     video = VideoFileClip(video_path)
 
     # Add text watermark
-    watermark = TextClip(watermark_text, fontsize=30, color='white', font="Arial-Bold")
+    watermark = TextClip(watermark_text, fontsize=30, color='white', font="Arial-Bold",method='caption')
     watermark = watermark.set_pos(("right", "bottom")).set_duration(video.duration)
 
     # Add logo
